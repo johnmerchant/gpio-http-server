@@ -23,7 +23,7 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
             },
             Err(_) => Err(error::ErrorBadRequest("invalid pin"))
         },
-        None => Err(error::ErrorBadRequest("pin missing"))
+        None => Err(error::ErrorBadRequest("pin param missing"))
     }
 }
 
