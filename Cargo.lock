@@ -682,6 +682,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "gpio-server"
+version = "0.1.0"
+dependencies = [
+ "actix-rt",
+ "actix-web",
+ "bytes",
+ "env_logger",
+ "futures",
+ "json",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sysfs_gpio",
+]
+
+[[package]]
 name = "h2"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -793,22 +809,6 @@ dependencies = [
  "widestring",
  "winapi 0.3.8",
  "winreg",
-]
-
-[[package]]
-name = "irrigation-server"
-version = "0.1.0"
-dependencies = [
- "actix-rt",
- "actix-web",
- "bytes",
- "env_logger",
- "futures",
- "json",
- "serde",
- "serde_derive",
- "serde_json",
- "sysfs_gpio",
 ]
 
 [[package]]
