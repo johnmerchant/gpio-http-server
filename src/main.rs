@@ -17,7 +17,7 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
             Ok(pin) => {
                 let gpio_pin = Pin::new(pin);
                 match gpio_pin.export() {
-                    Ok(_) => match gpio_pin.set_direction(Direction::Out) {
+                    Ok(_) => match gpio_pin.set_direction(Direction::Low) {
                         Ok(_) => match gpio_pin.get_value() {
                             Ok(value) => match gpio_pin.unexport() {
                                 Ok(_) => Ok(HttpResponse::Ok().body(value.to_string())),
