@@ -7,7 +7,7 @@ extern crate sysfs_gpio;
 use std::{env, io};
 use actix_web::{middleware, App, error, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_rt;
-use sysfs_gpio::{Pin};
+use sysfs_gpio::{Direction, Pin};
 
 #[get("/gpio/{pin}")]
 async fn get_pin(req: HttpRequest) -> impl Responder {
@@ -17,14 +17,17 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
             Ok(pin) => {
                 let gpio_pin = Pin::new(pin);
                 match gpio_pin.export() {
-                    Ok(_) => match gpio_pin.get_value() {
-                        Ok(value) => match gpio_pin.unexport() {
-                            Ok(_) => Ok(HttpResponse::Ok().body(value.to_string())),
-                            Err(err) => Err(error::ErrorInternalServerError(format!("failed to unexport pin {}: {}", pin, err)))
-                        }
-                        Err(err) => Err(error::ErrorInternalServerError(format!("failed to get value from pin {}: {}", pin, err)))
+                    Ok(_) => match gpio_pin.set_direction(Direction::In) {
+                        Ok(_) => match gpio_pin.get_value() {
+                            Ok(value) => match gpio_pin.unexport() {
+                                Ok(_) => Ok(HttpResponse::Ok().body(value.to_string())),
+                                Err(err) => Err(error::ErrorInternalServerError(format!("failed to unexport pin {}: {}", pin, err)))
+                            }
+                            Err(err) => Err(error::ErrorInternalServerError(format!("failed to get value from pin {}: {}", pin, err)))
+                        },
+                        Err(err) => Err(error::ErrorInternalServerError(format!("failed to export pin {}: {}", pin, err)))
                     },
-                    Err(err) => Err(error::ErrorInternalServerError(format!("failed to export pin {}: {}", pin, err)))
+                    Err(err) => Err(error::ErrorInternalServerError(format!("failed to set pin {} direction In: {}", pin, err)))
                 }
             },
             Err(_) => Err(error::ErrorBadRequest("invalid pin"))
@@ -49,14 +52,17 @@ async fn post_pin(req: HttpRequest, value: u8) -> impl Responder {
             Ok(pin) => {
                 let gpio_pin = Pin::new(pin);
                 match gpio_pin.export() {
-                    Ok(_) => match gpio_pin.set_value(value) {
-                        Ok(_) => match gpio_pin.unexport() {
-                            Ok(_) => Ok(HttpResponse::NoContent().finish()),
-                            Err(err) => Err(error::ErrorInternalServerError(format!("failed to unexport pin {}: {}", pin, err)))
-                        }
-                        Err(err) => Err(error::ErrorBadRequest(format!("failed to write pin {}: {}", pin, err)))
+                    Ok(_) => match gpio_pin.set_direction(Direction::Out) {
+                        Ok(_) => match gpio_pin.set_value(value) {
+                            Ok(_) => match gpio_pin.unexport() {
+                                Ok(_) => Ok(HttpResponse::NoContent().finish()),
+                                Err(err) => Err(error::ErrorInternalServerError(format!("failed to unexport pin {}: {}", pin, err)))
+                            }
+                            Err(err) => Err(error::ErrorInternalServerError(format!("failed to write pin {}: {}", pin, err)))
+                        },
+                        Err(err) => Err(error::ErrorInternalServerError(format!("failed to export pin {}: {}", pin, err)))
                     },
-                    Err(err) => Err(error::ErrorInternalServerError(format!("failed to export pin {}: {}", pin, err)))
+                    Err(err) => Err(error::ErrorInternalServerError(format!("failed set {} pin direction out: {}", pin, err)))
                 }
             },
             Err(_) => Err(error::ErrorBadRequest("invalid pin"))
