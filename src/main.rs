@@ -19,7 +19,7 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
                 match gpio_pin.export() {
                     Ok(_) => match gpio_pin.set_direction(Direction::In) {
                         Ok(_) => match gpio_pin.get_value() {
-                            Ok(_) => Ok(HttpResponse::Ok().body(value.to_string())),
+                            Ok(value) => Ok(HttpResponse::Ok().body(value.to_string())),
                             Err(err) => Err(error::ErrorInternalServerError(format!("failed to get value from pin {}: {}", pin, err)))
                         },
                         Err(err) => Err(error::ErrorInternalServerError(format!("failed to export pin {}: {}", pin, err)))
