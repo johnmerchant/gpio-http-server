@@ -1,5 +1,5 @@
 [package]
-name = "gpio-server"
+name = "gpio-http-server"
 version = "0.1.0"
 authors = ["John Merchant", "Matthew Croall"]
 edition = "2018"

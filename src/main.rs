@@ -6,7 +6,6 @@ use std::{env, io};
 use actix_web::{middleware, App, error, HttpRequest, HttpResponse, HttpServer, Responder};
 use sysfs_gpio::{Pin};
 
-
 #[get("/gpio/{pin}")]
 async fn get_pin(req: HttpRequest) -> impl Responder {
     println!("{:?}", req);
