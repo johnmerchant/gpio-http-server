@@ -2,8 +2,11 @@
 extern crate actix_web;
 extern crate sysfs_gpio;
 
+mod app;
+
 use std::{env, io};
 use actix_web::{middleware, App, error, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_rt;
 use sysfs_gpio::{Pin};
 
 #[get("/gpio/{pin}")]
@@ -17,7 +20,7 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
                     Ok(value) => {
                         Ok(HttpResponse::Ok().body(value.to_string()))
                     },
-                    Err(_) => Err(error::ErrorInternalServerError("failed to read value"))
+                    Err(err) => Err(error::ErrorInternalServerError(format!("failed to read value: {}", err)))
                 }
             },
             Err(_) => Err(error::ErrorBadRequest("invalid pin"))
