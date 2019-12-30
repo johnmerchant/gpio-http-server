@@ -2,8 +2,6 @@
 extern crate actix_web;
 extern crate sysfs_gpio;
 
-mod app;
-
 use std::{env, io};
 use actix_web::{middleware, App, error, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_rt;
