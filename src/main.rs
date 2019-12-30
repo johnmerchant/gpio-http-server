@@ -43,7 +43,7 @@ async fn post_pin_on(req: HttpRequest) -> impl Responder {
 
 #[post("/gpio/{pin}/off")]
 async fn post_pin_off(req: HttpRequest) -> impl Responder  {
-    post_pin(req, 1).await
+    post_pin(req, 0).await
 }
 
 async fn post_pin(req: HttpRequest, value: u8) -> impl Responder {
