@@ -5,6 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Use nightly
+      run: rustup default nightly
+    - name: Update
+      run: cargo update
     - name: Install Cross
       run: cargo install cross
     - name: Build
