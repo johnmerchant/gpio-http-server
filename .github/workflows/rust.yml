@@ -1,0 +1,11 @@
+name: Rust
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Cross
+      run: cargo install cross
+    - name: Build
+      run: cross build --target=armv7-unknown-linux-musleabihf --release --verbose
