@@ -14,7 +14,7 @@ jobs:
     - name: Install Cross
       run: cargo install --force --git https://github.com/rust-embedded/cross cross
     - name: Build
-      run: cross build --target=armv7-unknown-linux-musleabihf --release --verbose
+      run: cross build --target=armv7-unknown-linux-musleabihf --release --verbose -C linker=arm-linux-musleabihf-gcc
     - name: Upload asset to release
       uses: actions-github/upload-to-release@v1.0.0
       with:
