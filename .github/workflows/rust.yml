@@ -9,8 +9,8 @@ jobs:
       run: cargo install cross
     - name: Build
       run: cross build --target=armv7-unknown-linux-musleabihf --release --verbose
-    - name: GH Release
-      uses: softprops/action-gh-release@v0.1.0
+    - name: Upload asset to release
+      uses: actions-github/upload-to-release@v1.0.0
       with:
-        # Comma-delimited list of path globs for asset files to upload
-        files: ./target/armv7-unknown-linux-musleabihf/release/gpio-http-server
+        # Input file
+        file: ./target/armv7-unknown-linux-musleabihf/release/gpio-http-server
