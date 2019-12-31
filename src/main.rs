@@ -1,5 +1,3 @@
-#![feature(new_uninit)]
-
 #[macro_use]
 extern crate actix_web;
 extern crate sysfs_gpio;
@@ -8,6 +6,9 @@ use std::{env, io};
 use actix_web::{middleware, App, error, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_rt;
 use sysfs_gpio::{Direction, Pin};
+
+const ON: u8 = 0;
+const OFF: u8 = 1;
 
 #[get("/gpio/{pin}")]
 async fn get_pin(req: HttpRequest) -> impl Responder {
@@ -18,7 +19,7 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
                 let gpio_pin = Pin::new(pin);
                 match gpio_pin.export() {
                     Ok(_) => match gpio_pin.get_value() {
-                        Ok(value) => Ok(HttpResponse::Ok().body(value.to_string())),
+                        Ok(value) => Ok(HttpResponse::Ok().body(if value == ON { "1" } else { "0" })),
                         Err(err) => Err(error::ErrorInternalServerError(format!("failed to get value from pin {}: {}", pin, err)))
                     },
                     Err(err) => Err(error::ErrorInternalServerError(format!("failed to export pin {}: {}", pin, err)))
@@ -32,12 +33,12 @@ async fn get_pin(req: HttpRequest) -> impl Responder {
 
 #[post("/gpio/{pin}/on")]
 async fn post_pin_on(req: HttpRequest) -> impl Responder {
-    post_pin(req, 1).await
+    post_pin(req, ON).await
 }
 
 #[post("/gpio/{pin}/off")]
 async fn post_pin_off(req: HttpRequest) -> impl Responder  {
-    post_pin(req, 0).await
+    post_pin(req, OFF).await
 }
 
 async fn post_pin(req: HttpRequest, value: u8) -> impl Responder {
