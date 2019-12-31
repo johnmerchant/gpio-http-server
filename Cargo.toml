@@ -3,6 +3,7 @@ name = "gpio-http-server"
 version = "0.1.0"
 authors = ["John Merchant", "Matthew Croall"]
 edition = "2018"
+crate_type = ["bin"]
 
 [dependencies]
 actix-rt = "1.0.0"
