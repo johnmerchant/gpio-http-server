@@ -9,10 +9,18 @@ jobs:
       run: rustup default nightly
     - name: Update
       run: cargo update
-    - name: Install Cross
-      run: cargo install --force --git https://github.com/rust-embedded/cross cross
+    - name: Install toolchain
+      run: sudo apt-get install -y gcc-arm-linux-musleabihf
+    - name: Add target
+      run: rustup target add armv7-unknown-linux-gnueabihf
+    - name: Configure cargo 
+      run: |
+        cat >>~/.cargo/config <<EOF
+        [target.armv7-unknown-linux-gnueabihf]
+        linker = "arm-linux-gnueabihf-gcc"
+        EOF
     - name: Build
-      run: cross build --target=armv7-unknown-linux-musleabihf --release
+      run: cargo build --target=armv7-unknown-linux-musleabihf --release
     - name: Upload asset to release
       uses: actions-github/upload-to-release@v1.0.0
       with:
