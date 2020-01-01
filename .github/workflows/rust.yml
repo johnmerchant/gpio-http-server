@@ -20,7 +20,7 @@ jobs:
         linker = "arm-linux-gnueabihf-gcc"
         EOF
     - name: Build
-      run: cargo build --target=armv7-unknown-linux-gnueabihf--release
+      run: cargo build --target=armv7-unknown-linux-gnueabihf --release
     - name: Upload asset to release
       uses: actions-github/upload-to-release@v1.0.0
       with:
