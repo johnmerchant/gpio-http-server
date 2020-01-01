@@ -26,4 +26,5 @@ jobs:
       with:
         name: gpio-http-server
         path: ./target/armv7-unknown-linux-gnueabihf/release/gpio-http-server
+        release_id: ${ git rev-parse --short "$GITHUB_SHA"  }
         repo-token: ${{ secrets.GITHUB_TOKEN }}
