@@ -21,7 +21,9 @@ jobs:
         EOF
     - name: Build
       run: cargo build --target=armv7-unknown-linux-gnueabihf --release
-    - name: Upload asset to release
-      uses: actions-github/upload-to-release@v1.0.0
+    - name: Upload to Release Action
+      uses: Shopify/upload-to-release@1.0.0
       with:
-        file: ./target/armv7-unknown-linux-gnueabihf/release/gpio-http-server
+        name: gpio-http-server
+        path: ./target/armv7-unknown-linux-gnueabihf/release/gpio-http-server
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
